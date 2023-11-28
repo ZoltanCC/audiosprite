@@ -55,6 +55,11 @@ module.exports = function(files) {
   let offsetCursor = 0
   const wavArgs = ['-ar', opts.samplerate, '-ac', opts.channels, '-f', 's16le']
   const tempFile = mktemp('audiosprite')
+
+  fs.writeFileSync(tempFile, "", (err) => {
+    if (err) throw err;
+    opts.logger.debug("Temporary file was successfully saved!");
+  });
   
   opts.logger.debug('Created temporary file', { file: tempFile })
   
@@ -107,6 +112,10 @@ module.exports = function(files) {
   
   function makeRawAudioFile(src, cb) {
     var dest = mktemp('audiosprite')
+    fs.writeFileSync(dest, "", (err) => {
+      if (err) throw err;
+      opts.logger.debug("Temporary file was successfully saved!");
+    });
     
     opts.logger.debug('Start processing', { file: src })
     
@@ -318,7 +327,7 @@ module.exports = function(files) {
         exportFile(tempFile, opts.output, ext, formats[ext], true, cb)
       }, function(err) {
         if (err) {
-          return callback(new Error('Error exporting file'))
+          return callback(new Error('Error exporting file' + JSON.stringify(err, undefined, 3)))
         }
         if (opts.autoplay) {
           json.autoplay = opts.autoplay

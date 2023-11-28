@@ -2,7 +2,7 @@
 
 var fs = require('fs')
 var _ = require('underscore')._
-var winston = require('winston')
+// var winston = require('winston')
 
 var audiosprite = require('./audiosprite')
 
@@ -99,15 +99,15 @@ var optimist = require('optimist')
 var argv = optimist.argv
 var opts = _.extend({}, argv)
 
-winston.remove(winston.transports.Console)
-winston.add(winston.transports.Console, {
-  colorize: true
-, level: argv.log
-, handleExceptions: false
-})
-winston.debug('Parsed arguments', argv)
+// winston.remove(winston.transports.Console)
+// winston.add(winston.transports.Console, {
+//   colorize: true
+// , level: argv.log
+// , handleExceptions: false
+// })
+// winston.debug('Parsed arguments', argv)
 
-opts.logger = winston
+opts.logger = console
 
 opts.bitrate = parseInt(argv.bitrate, 10)
 opts.samplerate = parseInt(argv.samplerate, 10)
@@ -136,20 +136,20 @@ if (process.platform == 'win32') {
 
 if (argv.help || !files.length) {
   if (!argv.help) {
-    winston.error('No input files specified.')
+    console.error('No input files specified.')
   }
-  winston.info('Usage: audiosprite [options] file1.mp3 file2.mp3 *.wav')
-  winston.info(optimist.help())
+  console.info('Usage: audiosprite [options] file1.mp3 file2.mp3 *.wav')
+  console.info(optimist.help())
   process.exit(1)
 }
 
 audiosprite(files, opts, function(err, obj) {
   if (err) {
-    winston.error(err)
+    console.error(err)
     process.exit(0)
   }
   var jsonfile = opts.output + '.json'
   fs.writeFileSync(jsonfile, JSON.stringify(obj, null, 2))
-  winston.info('Exported json OK', { file: jsonfile })
-  winston.info('All done')
+  console.info('Exported json OK', { file: jsonfile })
+  console.info('All done')
 })
